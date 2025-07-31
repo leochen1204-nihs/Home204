@@ -128,7 +128,7 @@
 	
 <body>
 
-  <h1>Home Door Control</h1>
+  <h1>Home204鐵捲門遠端控制</h1>
 
   <!-- Login form -->
   <div id="loginForm">
@@ -172,8 +172,8 @@
     firebase.initializeApp(firebaseConfig);
 
     // Predefined login credentials (can be replaced with your logic)
-    const allowedEmail = "leochen1204@gmail.com";
-    const allowedPassword = "12365478";
+    // const allowedEmail = "leochen1204@gmail.com";
+    // const allowedPassword = "12365478";
 
     const loginForm = document.getElementById("loginForm");
     const dashboard = document.getElementById("dashboard");
@@ -189,9 +189,8 @@
       }
 
       // Check hardcoded credentials first
-      if(email === allowedEmail && password === allowedPassword){
-        // Sign in with Firebase
-        firebase.auth().signInWithEmailAndPassword(email, password)
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
           .then(userCredential => {
             console.log("Signed in as", userCredential.user.email);
             loginForm.style.display = "none";
@@ -201,9 +200,7 @@
           .catch(error => {
             alert("Firebase login failed: " + error.message);
           });
-      } else {
-        alert("Invalid email or password.");
-      }
+
     });
 
     function startRelayControl() {
