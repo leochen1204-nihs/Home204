@@ -74,22 +74,57 @@
     }
 
     .relay-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #1e88e5;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      padding: 60px 20px;
-      margin: 15px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 220px;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.2s, opacity 0.3s;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;            /* 字小一點 */
+  font-weight: bold;
+  padding: 30px 20px;         /* 高度減半 */
+  margin: 10px;
+  border-radius: 15px;
+  width: 160px;               /* 寬度縮小 */
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.3); /* 預設立體陰影 */
+}
+
+/* 按下凹陷效果 */
+.relay-card:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+}
+
+/* 三種顏色 */
+.relay-up {
+  background-color: #2ecc71;      /* 綠色 */
+}
+.relay-up:hover {
+  background-color: #27ae60;
+}
+
+.relay-stop {
+  background-color: #e74c3c;      /* 紅色 */
+}
+.relay-stop:hover {
+  background-color: #c0392b;
+}
+
+.relay-down {
+  background-color: #2ecc71;      /* 綠色 */
+}
+.relay-down:hover {
+  background-color: #27ae60;
+}
+
+/* 手機版調整 */
+@media (max-width: 700px) {
+  .relay-card {
+    width: 90%;
+    padding: 25px 0;
+  }
+}
 
     .relay-card:hover {
       background-color: #1565c0;
@@ -138,12 +173,11 @@
   </div>
 
   <!-- Dashboard -->
-  <div id="dashboard">
-    <div class="relay-container">
-      <div class="relay-card" data-id="1">UP</div>
-      <div class="relay-card" data-id="2">STOP</div>
-      <div class="relay-card" data-id="3">DOWN</div>
-    </div>
+<div class="relay-container">
+  <div class="relay-card relay-up" data-id="1">UP</div>
+  <div class="relay-card relay-stop" data-id="2">STOP</div>
+  <div class="relay-card relay-down" data-id="3">DOWN</div>
+</div>
 
     <button id="logoutBtn">Logout</button>
   </div>
