@@ -262,10 +262,9 @@
         });
 
         toggleButton.onclick = () => {
-          relayRef.get().then(snap => {
-            relayRef.set(!snap.val());
-          });
-        };
+		  const timestamp = Date.now();
+		  relayRef.set(timestamp);
+		};
       });
 
       document.getElementById("allOffBtn").onclick = () => {
