@@ -73,79 +73,75 @@
       justify-content: center;
     }
 
+    /* 改良後的立體按鈕 */
     .relay-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;            /* 字小一點 */
-  font-weight: bold;
-  padding: 30px 20px;         /* 高度減半 */
-  margin: 10px;
-  border-radius: 15px;
-  width: 160px;               /* 寬度縮小 */
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.1s, box-shadow 0.1s;
-  box-shadow: 0 6px 0 rgba(0,0,0,0.3); /* 預設立體陰影 */
-}
-
-/* 按下凹陷效果 */
-.relay-card:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-}
-
-/* 三種顏色 */
-.relay-up {
-  background-color: #2ecc71;      /* 綠色 */
-}
-.relay-up:hover {
-  background-color: #27ae60;
-}
-
-.relay-stop {
-  background-color: #e74c3c;      /* 紅色 */
-}
-.relay-stop:hover {
-  background-color: #c0392b;
-}
-
-.relay-down {
-  background-color: #2ecc71;      /* 綠色 */
-}
-.relay-down:hover {
-  background-color: #27ae60;
-}
-
-/* 手機版調整 */
-@media (max-width: 700px) {
-  .relay-card {
-    width: 90%;
-    padding: 25px 0;
-  }
-}
-
-    .relay-card:hover {
-      background-color: #1565c0;
-      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;           
+      font-weight: bold;
+      padding: 30px 20px;        
+      margin: 10px;
+      border-radius: 15px;
+      width: 160px;              
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.3); /* 立體陰影 */
     }
 
+    /* 按下凹陷效果 */
+    .relay-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    }
+
+    /* 三種顏色 */
+    .relay-up {
+      background-color: #2ecc71;      /* 綠色 */
+    }
+    .relay-up:hover {
+      background-color: #27ae60;
+    }
+
+    .relay-stop {
+      background-color: #e74c3c;      /* 紅色 */
+    }
+    .relay-stop:hover {
+      background-color: #c0392b;
+    }
+
+    .relay-down {
+      background-color: #2ecc71;      /* 綠色 */
+    }
+    .relay-down:hover {
+      background-color: #27ae60;
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 700px) {
+      .relay-card {
+        width: 90%;
+        padding: 25px 0;
+      }
+    }
 
     #logoutBtn {
       background-color: #555;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+      max-width: 300px;
+      width: 90%;
     }
 
     #logoutBtn:hover {
       opacity: 0.8;
-    }
-
-    @media (max-width: 700px) {
-      .relay-card {
-        width: 90%;
-        margin: 10px auto;
-        display: block;
-      }
     }
 
     footer {
@@ -157,27 +153,24 @@
   </style>
 </head>
 
-
-
-
-	
 <body>
 
-  <h1>Home204鐵捲門遠端控制</h1>
+  <h1>Home204 鐵捲門遠端控制</h1>
 
   <!-- Login form -->
   <div id="loginForm">
     <input type="email" id="email" placeholder="Enter Email" value="home214@gmail.com" required />
-    <input type="password" id="password" placeholder="Enter Password" required autofocus />
+    <input type="password" id="password" placeholder="Enter Password" required />
     <button id="loginBtn">Login</button>
   </div>
 
   <!-- Dashboard -->
-<div class="relay-container">
-  <div class="relay-card relay-up" data-id="1">UP</div>
-  <div class="relay-card relay-stop" data-id="2">STOP</div>
-  <div class="relay-card relay-down" data-id="3">DOWN</div>
-</div>
+  <div id="dashboard">
+    <div class="relay-container">
+      <div class="relay-card relay-up" data-id="1">UP</div>
+      <div class="relay-card relay-stop" data-id="2">STOP</div>
+      <div class="relay-card relay-down" data-id="3">DOWN</div>
+    </div>
 
     <button id="logoutBtn">Logout</button>
   </div>
@@ -205,10 +198,6 @@
 
     firebase.initializeApp(firebaseConfig);
 
-    // Predefined login credentials (can be replaced with your logic)
-    // const allowedEmail = "leochen1204@gmail.com";
-    // const allowedPassword = "12365478";
-
     const loginForm = document.getElementById("loginForm");
     const dashboard = document.getElementById("dashboard");
     const loginBtn = document.getElementById("loginBtn");
@@ -222,8 +211,6 @@
         return;
       }
 
-      // Check hardcoded credentials first
-
       firebase.auth().signInWithEmailAndPassword(email, password)
           .then(userCredential => {
             console.log("Signed in as", userCredential.user.email);
@@ -234,38 +221,31 @@
           .catch(error => {
             alert("Firebase login failed: " + error.message);
           });
-
     });
 
-	    function startRelayControl() {
-		const db = firebase.database();
-		
-		document.querySelectorAll(".relay-card").forEach(card => {
-		   const id = card.getAttribute("data-id");
-		   const path = `triggerRelay${id}`;
-		   card.onclick = () => {
-		     db.ref(path).set(Date.now());
-		   };
-		});
-	    }
+    function startRelayControl() {
+      const db = firebase.database();
+      document.querySelectorAll(".relay-card").forEach(card => {
+        const id = card.getAttribute("data-id");
+        const path = `triggerRelay${id}`;
+        card.onclick = () => {
+          db.ref(path).set(Date.now());
+        };
+      });
+    }
 
-	    document.getElementById("logoutBtn").onclick = () => {
-	      firebase.auth().signOut()
-	        .then(() => {
-	          dashboard.style.display = "none";
-	          loginForm.style.display = "block";
-	          document.getElementById("email").value = "";
-	          document.getElementById("password").value = "";
-	        })
-	        .catch(error => {
-	          alert("Logout failed: " + error.message);
-	        });
-	    };
-	document.getElementById("password").addEventListener("keydown", (event) => {
-	  if(event.key === "Enter") {
-	    loginBtn.click();
-	  }
-	});
+    document.getElementById("logoutBtn").onclick = () => {
+      firebase.auth().signOut()
+        .then(() => {
+          dashboard.style.display = "none";
+          loginForm.style.display = "block";
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+        })
+        .catch(error => {
+          alert("Logout failed: " + error.message);
+        });
+    };
   </script>
 </body>
 </html>
