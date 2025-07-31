@@ -62,7 +62,7 @@
 
     /* Dashboard */
     #dashboard {
-      display: none;
+      display: none; /* 預設隱藏 */
     }
 
     .relay-container {
@@ -73,53 +73,52 @@
       justify-content: center;
     }
 
-    /* 改良後的立體按鈕 */
+    /* 立體按鈕 */
     .relay-card {
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 24px;           
+      font-size: 24px;
       font-weight: bold;
-      padding: 30px 20px;        
+      padding: 30px 20px;
       margin: 10px;
       border-radius: 15px;
-      width: 160px;              
+      width: 160px;
       cursor: pointer;
       user-select: none;
-      transition: transform 0.1s, box-shadow 0.1s;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.3); /* 立體陰影 */
+      transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+      -webkit-tap-highlight-color: transparent; /* 手機按下去不會變藍色 */
     }
 
-    /* 按下凹陷效果 */
     .relay-card:active {
       transform: translateY(4px);
       box-shadow: 0 2px 0 rgba(0,0,0,0.3);
     }
 
-    /* 三種顏色 */
+    /* 顏色區分 + 按下變暗 */
     .relay-up {
-      background-color: #2ecc71;      /* 綠色 */
+      background-color: #2ecc71;        /* 綠 */
     }
-    .relay-up:hover {
-      background-color: #27ae60;
+    .relay-up:active {
+      background-color: #1f7a4d;        /* 暗綠 */
     }
 
     .relay-stop {
-      background-color: #e74c3c;      /* 紅色 */
+      background-color: #e74c3c;        /* 紅 */
     }
-    .relay-stop:hover {
-      background-color: #c0392b;
+    .relay-stop:active {
+      background-color: #992d22;        /* 暗紅 */
     }
 
     .relay-down {
-      background-color: #2ecc71;      /* 綠色 */
+      background-color: #2ecc71;        /* 綠 */
     }
-    .relay-down:hover {
-      background-color: #27ae60;
+    .relay-down:active {
+      background-color: #1f7a4d;        /* 暗綠 */
     }
 
-    /* 手機版調整 */
     @media (max-width: 700px) {
       .relay-card {
         width: 90%;
@@ -139,7 +138,6 @@
       max-width: 300px;
       width: 90%;
     }
-
     #logoutBtn:hover {
       opacity: 0.8;
     }
@@ -171,7 +169,6 @@
       <div class="relay-card relay-stop" data-id="2">STOP</div>
       <div class="relay-card relay-down" data-id="3">DOWN</div>
     </div>
-
     <button id="logoutBtn">Logout</button>
   </div>
 
@@ -185,17 +182,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
   <script>
-    // Firebase config
-	const firebaseConfig = {
-	  apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
-	  authDomain: "esp32-autohome204.firebaseapp.com",
-	  databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
-	  projectId: "esp32-autohome204",
-	  storageBucket: "esp32-autohome204.firebasestorage.app",
-	  messagingSenderId: "835599613325",
-	  appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
-	};
-
+    const firebaseConfig = {
+      apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
+      authDomain: "esp32-autohome204.firebaseapp.com",
+      databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "esp32-autohome204",
+      storageBucket: "esp32-autohome204.firebasestorage.app",
+      messagingSenderId: "835599613325",
+      appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
+    };
     firebase.initializeApp(firebaseConfig);
 
     const loginForm = document.getElementById("loginForm");
@@ -212,15 +207,15 @@
       }
 
       firebase.auth().signInWithEmailAndPassword(email, password)
-          .then(userCredential => {
-            console.log("Signed in as", userCredential.user.email);
-            loginForm.style.display = "none";
-            dashboard.style.display = "block";
-            startRelayControl();
-          })
-          .catch(error => {
-            alert("Firebase login failed: " + error.message);
-          });
+        .then(userCredential => {
+          console.log("Signed in as", userCredential.user.email);
+          loginForm.style.display = "none";
+          dashboard.style.display = "block";
+          startRelayControl();
+        })
+        .catch(error => {
+          alert("Firebase login failed: " + error.message);
+        });
     });
 
     function startRelayControl() {
