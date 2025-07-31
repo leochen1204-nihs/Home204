@@ -168,7 +168,7 @@
   <!-- Login form -->
   <div id="loginForm">
     <input type="email" id="email" placeholder="Enter Email" value="home214@gmail.com" required />
-    <input type="password" id="password" placeholder="Enter Password" required />
+    <input type="password" id="password" placeholder="Enter Password" required autofocus />
     <button id="loginBtn">Login</button>
   </div>
 
@@ -237,30 +237,35 @@
 
     });
 
-    function startRelayControl() {
-	const db = firebase.database();
-	
-	document.querySelectorAll(".relay-card").forEach(card => {
-	   const id = card.getAttribute("data-id");
-	   const path = `triggerRelay${id}`;
-	   card.onclick = () => {
-	     db.ref(path).set(Date.now());
-	   };
-	});
-    }
+	    function startRelayControl() {
+		const db = firebase.database();
+		
+		document.querySelectorAll(".relay-card").forEach(card => {
+		   const id = card.getAttribute("data-id");
+		   const path = `triggerRelay${id}`;
+		   card.onclick = () => {
+		     db.ref(path).set(Date.now());
+		   };
+		});
+	    }
 
-    document.getElementById("logoutBtn").onclick = () => {
-      firebase.auth().signOut()
-        .then(() => {
-          dashboard.style.display = "none";
-          loginForm.style.display = "block";
-          document.getElementById("email").value = "";
-          document.getElementById("password").value = "";
-        })
-        .catch(error => {
-          alert("Logout failed: " + error.message);
-        });
-    };
+	    document.getElementById("logoutBtn").onclick = () => {
+	      firebase.auth().signOut()
+	        .then(() => {
+	          dashboard.style.display = "none";
+	          loginForm.style.display = "block";
+	          document.getElementById("email").value = "";
+	          document.getElementById("password").value = "";
+	        })
+	        .catch(error => {
+	          alert("Logout failed: " + error.message);
+	        });
+	    };
+	document.getElementById("password").addEventListener("keydown", (event) => {
+	  if(event.key === "Enter") {
+	    loginBtn.click();
+	  }
+	});
   </script>
 </body>
 </html>
