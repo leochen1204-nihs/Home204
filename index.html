@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>ESP32 Relay Control Dashboard</title>
+  <title>鐵捲門雲端控制</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -134,7 +134,7 @@
 
 <body>
 
-  <h1>Home204 鐵捲門遠端控制</h1>
+  <h1>Home204 鐵捲門雲端控制</h1>
 
   <!-- Login form -->
   <div id="loginForm">
@@ -210,15 +210,21 @@
         const id = card.getAttribute("data-id");
         const path = `triggerRelay${id}`;
 
-        // 點擊觸發 Firebase
-        card.addEventListener("click", () => {
-          db.ref(path).set(Date.now());
+        card.addEventListener("pointerdown", () => {
+          card.classList.add("pressed");
+          // 可選: 震動
+          if (navigator.vibrate) navigator.vibrate(50);
         });
 
-        // 手機 & 電腦的按下動畫
-        card.addEventListener("pointerdown", () => card.classList.add("pressed"));
-        card.addEventListener("pointerup", () => card.classList.remove("pressed"));
-        card.addEventListener("pointerleave", () => card.classList.remove("pressed"));
+        card.addEventListener("pointerup", () => {
+          db.ref(path).set(Date.now());  // 觸發動作
+          // 維持暗色 0.4 秒
+          setTimeout(() => card.classList.remove("pressed"), 400);
+        });
+
+        card.addEventListener("pointerleave", () => {
+          setTimeout(() => card.classList.remove("pressed"), 400);
+        });
       });
     }
 
