@@ -224,31 +224,23 @@
       }
     });
 
-    function startRelayControl() {
-      const db = firebase.database();
-
-      const relays = [
-        { id: 1, path: "triggerRelay1" },
-        { id: 2, path: "triggerRelay2" },
-        { id: 3, path: "triggerRelay3" },
-      ];
-
-      relays.forEach(relay => {
-        const statusText = document.getElementById(`status${relay.id}`);
-        const toggleButton = document.getElementById(`btn${relay.id}`);
-        const relayRef = db.ref("/" + relay.path);
-
-        relayRef.on("value", (snapshot) => {
-          const state = snapshot.val();
-          statusText.innerText = state ? "ON" : "OFF";
-          toggleButton.style.backgroundColor = state ? "green" : "blue";
-        });
-
-        toggleButton.onclick = () => {
-		  const timestamp = Date.now();
-		  relayRef.set(timestamp);
-		};
-      });
+	function startRelayControl() {
+	  const db = firebase.database();
+	
+	  document.querySelectorAll(".relay-card").forEach(card => {
+	    const id = card.getAttribute("data-id");
+	    const path = `triggerRelay${id}`;
+	    card.onclick = () => {
+	      db.ref(path).set(Date.now());
+	    };
+	  });
+	
+	  document.getElementById("allOffBtn").onclick = () => {
+	    [1, 2, 3].forEach(id => {
+	      db.ref(`triggerRelay${id}`).set(Date.now());
+	    });
+	  };
+	}
 
       document.getElementById("allOffBtn").onclick = () => {
         relays.forEach(relay => {
