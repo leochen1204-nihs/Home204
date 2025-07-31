@@ -142,6 +142,11 @@
     }
   </style>
 </head>
+
+
+
+
+	
 <body>
 
   <h1>Home Door Control</h1>
@@ -161,12 +166,11 @@
       <div class="relay-card" data-id="3">DOWN</div>
     </div>
 
-    <button id="allOffBtn">All OFF</button>
     <button id="logoutBtn">Logout</button>
   </div>
 
   <footer>
-    Created by Tech StudyCell
+    Created by LeoChen
   </footer>
 
   <!-- Firebase SDKs -->
@@ -176,7 +180,6 @@
 
   <script>
     // Firebase config
-
 	const firebaseConfig = {
 	  apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
 	  authDomain: "esp32-autohome204.firebaseapp.com",
@@ -234,20 +237,7 @@
 	      db.ref(path).set(Date.now());
 	    };
 	  });
-	
-	  document.getElementById("allOffBtn").onclick = () => {
-	    [1, 2, 3].forEach(id => {
-	      db.ref(`triggerRelay${id}`).set(Date.now());
-	    });
-	  };
 	}
-
-      document.getElementById("allOffBtn").onclick = () => {
-        relays.forEach(relay => {
-          db.ref("/" + relay.path).set(false);
-        });
-      };
-    }
 
     document.getElementById("logoutBtn").onclick = () => {
       firebase.auth().signOut()
