@@ -19,13 +19,13 @@
 
     h1 {
       margin-top: 30px;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
     }
 
     /* Login form */
     #loginForm {
       max-width: 400px;
-      margin: 80px auto 20px;
+      margin: 60px auto 20px;
       background: white;
       padding: 30px 20px;
       border-radius: 15px;
@@ -39,7 +39,6 @@
       border: 1.5px solid #ccc;
       border-radius: 10px;
       box-sizing: border-box;
-      outline-offset: 2px;
       transition: border-color 0.3s ease;
     }
     #loginForm input:focus {
@@ -78,64 +77,49 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
-      padding: 40px 20px; /* 縮小高度 */
+      padding: 40px 10px; /* 高度縮小 */
       margin: 15px;
       border-radius: 15px;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.25);
-      width: 180px; /* 縮小寬度以便手機容納 */
+      width: 180px;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.2s, transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2); /* 立體效果 */
+      transition: all 0.15s ease;
     }
 
-    /* 顏色 */
-    .relay-up { background-color: #28a745; }    /* 綠 */
-    .relay-stop { background-color: #d32f2f; }  /* 紅 */
-    .relay-down { background-color: #28a745; }  /* 綠 */
+    .relay-card.up { background-color: #4CAF50; }    /* 綠 */
+    .relay-card.stop { background-color: #E53935; }  /* 紅 */
+    .relay-card.down { background-color: #4CAF50; }  /* 綠 */
 
-    /* 按下的立體效果（電腦用） */
-    .relay-card:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.3);
-    }
-    .relay-up:active { background-color: #1f7a4d; }
-    .relay-stop:active { background-color: #992d22; }
-    .relay-down:active { background-color: #1f7a4d; }
-
-    /* 手機按壓效果 class */
+    /* 按下動畫 */
     .relay-card.pressed {
       transform: translateY(4px);
       box-shadow: 0 2px 0 rgba(0,0,0,0.3);
     }
-    .relay-up.pressed { background-color: #1f7a4d; }
-    .relay-stop.pressed { background-color: #992d22; }
-    .relay-down.pressed { background-color: #1f7a4d; }
+    .relay-card.up.pressed { background-color: #2E7D32; }    /* 暗綠 */
+    .relay-card.stop.pressed { background-color: #B71C1C; }  /* 暗紅 */
+    .relay-card.down.pressed { background-color: #2E7D32; }  /* 暗綠 */
 
     #logoutBtn {
       background-color: #555;
       color: white;
+      margin-top: 20px;
       padding: 12px 25px;
       font-size: 16px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      margin: 20px auto;
-      display: block;
-      max-width: 200px;
-      transition: opacity 0.3s ease;
     }
-
     #logoutBtn:hover {
       opacity: 0.8;
     }
 
     @media (max-width: 700px) {
       .relay-card {
-        width: 40%; /* 手機螢幕兩個一行 */
-        padding: 35px 10px;
-        font-size: 20px;
+        width: 90%;
+        margin: 10px auto;
       }
     }
 
@@ -147,9 +131,10 @@
     }
   </style>
 </head>
+
 <body>
 
-  <h1>Home204鐵捲門遠端控制</h1>
+  <h1>Home204 鐵捲門遠端控制</h1>
 
   <!-- Login form -->
   <div id="loginForm">
@@ -161,9 +146,9 @@
   <!-- Dashboard -->
   <div id="dashboard">
     <div class="relay-container">
-      <div class="relay-card relay-up" data-id="1">UP</div>
-      <div class="relay-card relay-stop" data-id="2">STOP</div>
-      <div class="relay-card relay-down" data-id="3">DOWN</div>
+      <div class="relay-card up" data-id="1">UP</div>
+      <div class="relay-card stop" data-id="2">STOP</div>
+      <div class="relay-card down" data-id="3">DOWN</div>
     </div>
 
     <button id="logoutBtn">Logout</button>
@@ -180,15 +165,15 @@
 
   <script>
     // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
-      authDomain: "esp32-autohome204.firebaseapp.com",
-      databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "esp32-autohome204",
-      storageBucket: "esp32-autohome204.firebasestorage.app",
-      messagingSenderId: "835599613325",
-      appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
-    };
+	const firebaseConfig = {
+	  apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
+	  authDomain: "esp32-autohome204.firebaseapp.com",
+	  databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
+	  projectId: "esp32-autohome204",
+	  storageBucket: "esp32-autohome204.firebasestorage.app",
+	  messagingSenderId: "835599613325",
+	  appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
+	};
 
     firebase.initializeApp(firebaseConfig);
 
@@ -217,24 +202,24 @@
         });
     });
 
-    function enableMobilePressEffect() {
-      document.querySelectorAll(".relay-card").forEach(card => {
-        card.addEventListener("touchstart", () => card.classList.add("pressed"));
-        card.addEventListener("touchend", () => card.classList.remove("pressed"));
-        card.addEventListener("touchcancel", () => card.classList.remove("pressed"));
-      });
-    }
-
     function startRelayControl() {
       const db = firebase.database();
-      document.querySelectorAll(".relay-card").forEach(card => {
+      const cards = document.querySelectorAll(".relay-card");
+
+      cards.forEach(card => {
         const id = card.getAttribute("data-id");
         const path = `triggerRelay${id}`;
-        card.onclick = () => {
+
+        // 點擊觸發 Firebase
+        card.addEventListener("click", () => {
           db.ref(path).set(Date.now());
-        };
+        });
+
+        // 手機 & 電腦的按下動畫
+        card.addEventListener("pointerdown", () => card.classList.add("pressed"));
+        card.addEventListener("pointerup", () => card.classList.remove("pressed"));
+        card.addEventListener("pointerleave", () => card.classList.remove("pressed"));
       });
-      enableMobilePressEffect(); // 啟用手機按壓動畫
     }
 
     document.getElementById("logoutBtn").onclick = () => {
