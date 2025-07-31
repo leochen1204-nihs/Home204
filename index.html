@@ -176,23 +176,27 @@
 
   <script>
     // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
-      authDomain: "esp32-autohome204.firebaseapp.com",
-      databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "esp32-autohome204",
-      storageBucket: "esp32-autohome204.firebasestorage.app",
-      messagingSenderId: "835599613325",
-      appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
-    };
+
+	const firebaseConfig = {
+	  apiKey: "AIzaSyCjdDG7XRhJhRjhbFbrLkrW8-yDMc9vFKs",
+	  authDomain: "esp32-autohome204.firebaseapp.com",
+	  databaseURL: "https://esp32-autohome204-default-rtdb.asia-southeast1.firebasedatabase.app",
+	  projectId: "esp32-autohome204",
+	  storageBucket: "esp32-autohome204.firebasestorage.app",
+	  messagingSenderId: "835599613325",
+	  appId: "1:835599613325:web:b6c11c3a598b1f07a6d1c4"
+	};
 
     firebase.initializeApp(firebaseConfig);
+
+    // Predefined login credentials (can be replaced with your logic)
+    const allowedEmail = "leochen1204@gmail.com";
+    const allowedPassword = "12365478";
 
     const loginForm = document.getElementById("loginForm");
     const dashboard = document.getElementById("dashboard");
     const loginBtn = document.getElementById("loginBtn");
 
-    // 登入按鈕事件
     loginBtn.addEventListener("click", () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
@@ -202,38 +206,53 @@
         return;
       }
 
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          console.log("Signed in as", userCredential.user.email);
-          loginForm.style.display = "none";
-          dashboard.style.display = "block";
-          startRelayControl();
-        })
-        .catch(error => {
-          alert("Login failed: " + error.message);
-        });
+      // Check hardcoded credentials first
+      if(email === allowedEmail && password === allowedPassword){
+        // Sign in with Firebase
+        firebase.auth().signInWithEmailAndPassword(email, password)
+          .then(userCredential => {
+            console.log("Signed in as", userCredential.user.email);
+            loginForm.style.display = "none";
+            dashboard.style.display = "block";
+            startRelayControl();
+          })
+          .catch(error => {
+            alert("Firebase login failed: " + error.message);
+          });
+      } else {
+        alert("Invalid email or password.");
+      }
     });
 
     function startRelayControl() {
       const db = firebase.database();
-      const relayCards = document.querySelectorAll(".relay-card");
 
-      relayCards.forEach(card => {
-        const id = card.getAttribute("data-id");
-        const path = "triggerRelay" + id;
+      const relays = [
+        { id: 1, path: "triggerRelay1" },
+        { id: 2, path: "triggerRelay2" },
+        { id: 3, path: "triggerRelay3" },
+      ];
 
-        card.addEventListener("click", () => {
-          const timestamp = Date.now();
-          db.ref("/" + path).set(timestamp);
+      relays.forEach(relay => {
+        const statusText = document.getElementById(`status${relay.id}`);
+        const toggleButton = document.getElementById(`btn${relay.id}`);
+        const relayRef = db.ref("/" + relay.path);
+
+        relayRef.on("value", (snapshot) => {
+          const state = snapshot.val();
+          statusText.innerText = state ? "ON" : "OFF";
+          toggleButton.style.backgroundColor = state ? "green" : "blue";
         });
+
+        toggleButton.onclick = () => {
+		  const timestamp = Date.now();
+		  relayRef.set(timestamp);
+		};
       });
 
       document.getElementById("allOffBtn").onclick = () => {
-        const timestamp = Date.now();
-        relayCards.forEach(card => {
-          const id = card.getAttribute("data-id");
-          const path = "triggerRelay" + id;
-          db.ref("/" + path).set(timestamp);
+        relays.forEach(relay => {
+          db.ref("/" + relay.path).set(false);
         });
       };
     }
