@@ -96,27 +96,6 @@
       opacity: 0.9;
     }
 
-    #allOffBtn, #logoutBtn {
-      max-width: 300px;
-      width: 90%;
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 15px auto;
-      display: block;
-      color: white;
-      transition: opacity 0.3s ease;
-    }
-
-    #allOffBtn {
-      background-color: #d32f2f;
-    }
-
-    #allOffBtn:hover {
-      opacity: 0.8;
-    }
 
     #logoutBtn {
       background-color: #555;
@@ -227,17 +206,17 @@
       }
     });
 
-	function startRelayControl() {
-	  const db = firebase.database();
+    function startRelayControl() {
+	const db = firebase.database();
 	
-	  document.querySelectorAll(".relay-card").forEach(card => {
-	    const id = card.getAttribute("data-id");
-	    const path = `triggerRelay${id}`;
-	    card.onclick = () => {
-	      db.ref(path).set(Date.now());
-	    };
-	  });
-	}
+	document.querySelectorAll(".relay-card").forEach(card => {
+	   const id = card.getAttribute("data-id");
+	   const path = `triggerRelay${id}`;
+	   card.onclick = () => {
+	     db.ref(path).set(Date.now());
+	   };
+	});
+    }
 
     document.getElementById("logoutBtn").onclick = () => {
       firebase.auth().signOut()
